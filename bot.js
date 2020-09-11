@@ -26,18 +26,16 @@ const joinError = new MessageEmbed()
 .setTitle("joinError")
 .setColor(10038562)
 .setDescription('bạn cần join 1 channel\n \ trước khi gọi bot....... ');
-const Error = new MessageEmbed()
-.setTitle("Error")
-.setColor(10038562)
-.setDescription('Lệnh chưa tồn tại\n \ /help để xem lệnh... ');
+
 
 
 
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`  ====================================================================================================\n \ |                                                                                                  |\n \ |                                                                                                  |\n \ |                                        Bot Joinning.....                                         |\n \ |                                                                                                  |\n \ |                                                                                                  |\n \ ====================================================================================================`);
+
 });
-client.login('NzUzNjA4MDU3MzQ2NDU3Njgy.X1oqMg.IZ9x08ERIOlCRzSPHlnUUbM8Jf4');
+client.login('');
 
 
 
