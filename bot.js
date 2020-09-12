@@ -20,61 +20,95 @@ const help = new MessageEmbed()
 .setColor(3447003)
 .setDescription('/join để gọi bot vào voice channel \n \
                  /leave để kick bot khỏi voice channel\n \
-                 /leave để kick bot khỏi voice channel\n \
-                 /play_<youtube link> để phát nhạc từ youtube');
+                 /play_<youtube link> để phát nhạc từ youtube\n \
+                 /pause để tạm dừng\n \
+                 /resume để tiếp tục phát\n \
+                 /stop để dừng phát');
 const joinError = new MessageEmbed()
 .setTitle("joinError")
 .setColor(10038562)
 .setDescription('bạn cần join 1 channel\n \ trước khi gọi bot....... ');
-
+const pause = new MessageEmbed()
+.setTitle("Pausing.......")
+.setColor(10038562)
+.setDescription('/resume để tiếp tục....... ');
+const stop = new MessageEmbed()
+.setTitle("Stoped.......")
+.setColor(10038562)
 
 
 
 
 client.on('ready', () => {
-  console.log(`  ====================================================================================================\n \ |                                                                                                  |\n \ |                                                                                                  |\n \ |                                        Bot Joinning.....                                         |\n \ |                                                                                                  |\n \ |                                                                                                  |\n \ ====================================================================================================`);
+  console.log(`  ====================================================================================================\n \
+ |                                                                                                  |\n \
+ |                                                                                                  |\n \
+ |                                        Bot Joinning.....                                         |\n \
+ |                                                                                                  |\n \
+ |                                                                                                  |\n \
+ ====================================================================================================`);
 
 });
-client.login('');
+client.login('NzUzOTU5MjE1NjM4MzgwNjA0.X1txPA.5ljX12xO8nLj-Zwwey5Op49BmEQ');
 
 
 
 
 
-client.on('message', msg => {
+client.on('message', async msg => {
   if (msg.content === '/help') {
     msg.channel.send(help);
   }
 
 
-  if (msg.content === '/join') {
+  if (msg.content.includes('/play_')) {
     if (msg.member.voice.channel) {
       msg.channel.send(join);
-      msg.member.voice.channel.join().then(connected => {
-        connected.client.on('message', msg =>{
+      var connection = await msg.member.voice.channel.join();
+      let link = msg.content.slice(6,);
+      
+      var dispatcher = await connection.play(ytdl(link, { filter: 'audioonly' }));
+      let play = new MessageEmbed()
+      .setTitle("now playing:")
+      .setColor(2067276)
+      .setThumbnail(link);
+      msg.channel.send(play);
+      client.on('message', async msg => {
+        if (msg.content === '/pause'){
+          await dispatcher.pause()
+          msg.channel.send(pause)
+          client.on('message', async msg => {
+            if(msg.content === '/resume'){
+              dispatcher.resume()
+              const resume = new MessageEmbed()
+              .setTitle("Resuming......")
+              .setColor(2067276)
+              .setDescription('now playing: ')
+              .setThumbnail(link);
+              msg.channel.send(resume);
+            }
+          })
+        }
+        if (msg.content === '/stop'){
+          dispatcher.destroy();
+          msg.channel.send(stop)
+        }
 
-
-          if (msg.content === '/leave'){
-            msg.member.voice.channel.leave()
-            msg.channel.send(leave);
-          }
-
-
-          else if     (msg.content.includes('/play_')) {
-            let link = msg.content.slice(6,);
-            connected.play(ytdl(link, { filter: 'audioonly' }));
-            let play = new MessageEmbed()
-            .setTitle("now playing:")
-            .setColor(2067276)
-            .setThumbnail(link);
-            msg.channel.send(play);
-          }
-
-        })
       })
     }
     else{
       msg.channel.send(joinError);
     }
+  }
+
+  if (msg.content === '/join') {
+    if (msg.member.voice.channel) {
+      msg.channel.send(join);
+      var connection = await msg.member.voice.channel.join();
+    }
+  }
+  if (msg.content === '/leave' && connection != ''){ 
+    msg.member.voice.channel.leave()
+    msg.channel.send(leave)
   }
 })
