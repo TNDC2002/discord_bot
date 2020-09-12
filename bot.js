@@ -21,6 +21,7 @@ const help = new MessageEmbed()
 .setDescription('/join để gọi bot vào voice channel \n \
                  /leave để kick bot khỏi voice channel\n \
                  /play_<youtube link> để phát nhạc từ youtube\n \
+                 /volume_<0 - 100> để set volume\n \
                  /pause để tạm dừng\n \
                  /resume để tiếp tục phát\n \
                  /stop để dừng phát');
@@ -34,6 +35,9 @@ const pause = new MessageEmbed()
 .setDescription('/resume để tiếp tục....... ');
 const stop = new MessageEmbed()
 .setTitle("Stoped.......")
+.setColor(10038562)
+const Finished = new MessageEmbed()
+.setTitle("Finished.......")
 .setColor(10038562)
 
 
@@ -49,7 +53,7 @@ client.on('ready', () => {
  ====================================================================================================`);
 
 });
-client.login('NzUzOTU5MjE1NjM4MzgwNjA0.X1txPA.5ljX12xO8nLj-Zwwey5Op49BmEQ');
+client.login('NzUzOTU5MjE1NjM4MzgwNjA0.X1txPA._nTwrCUqKlBDPBFDCHHRCHLOeQ4');
 
 
 
@@ -74,6 +78,15 @@ client.on('message', async msg => {
       .setThumbnail(link);
       msg.channel.send(play);
       client.on('message', async msg => {
+        if (msg.content.includes('/volume_')){
+          let volume = parseFloat(msg.content.slice(8,))/100;
+          await dispatcher.setVolume(volume);
+          const vol = new MessageEmbed()
+          .setTitle('Âm lượng hiện tại:')
+          .setColor(3447003)
+          .setDescription(volume*100)
+          msg.channel.send(vol)
+        }
         if (msg.content === '/pause'){
           await dispatcher.pause()
           msg.channel.send(pause)
@@ -93,7 +106,9 @@ client.on('message', async msg => {
           dispatcher.destroy();
           msg.channel.send(stop)
         }
-
+        dispatcher.on('finish', () => {
+          msg.channel.send(Finished);
+        });
       })
     }
     else{
