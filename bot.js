@@ -49,7 +49,7 @@ client.on('ready', () => {
  ====================================================================================================`);
 
 });
-client.login('NzUzOTU5MjE1NjM4MzgwNjA0.X1txPA.5ljX12xO8nLj-Zwwey5Op49BmEQ');
+client.login("<Your Bot's Token Here>");
 
 
 
