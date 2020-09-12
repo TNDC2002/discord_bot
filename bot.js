@@ -53,7 +53,7 @@ client.on('ready', () => {
  ====================================================================================================`);
 
 });
-client.login('NzUzOTU5MjE1NjM4MzgwNjA0.X1txPA._nTwrCUqKlBDPBFDCHHRCHLOeQ4');
+client.login('');
 
 
 
